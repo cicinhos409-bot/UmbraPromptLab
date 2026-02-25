@@ -14,6 +14,7 @@ import { UmbraCreator } from './components/UmbraCreator/UmbraCreator';
 import { SinopsesAgent } from './components/SinopsesAgent/SinopsesAgent';
 import { usePromptHistory } from './hooks/usePromptHistory';
 import { useSettings } from './hooks/useSettings';
+import { useAuth } from './hooks/useAuth';
 import { generatePrompt } from './services/mistralService';
 import type { AppView, GeneratedPrompt, PromptRequest, PresetIdea, StyleOption, MoodOption } from './types/prompt';
 import './App.css';
@@ -37,6 +38,39 @@ export default function App() {
 
     const { history, addPrompt, removePrompt, clearHistory } = usePromptHistory();
     const { settings, updateSettings, hasApiKey } = useSettings();
+    const { user, loading: authLoading, signOut } = useAuth();
+
+    // Auth guard — redirect to landing if not authenticated
+    useEffect(() => {
+        if (!authLoading && !user) {
+            window.location.href = '/landing.html';
+        }
+    }, [user, authLoading]);
+
+    // Show loader while checking auth
+    if (authLoading || !user) {
+        return (
+            <div style={{
+                minHeight: '100vh', display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                background: '#0d0a05',
+                fontFamily: "'Cinzel Decorative', serif",
+            }}>
+                <div style={{
+                    fontSize: '2rem', marginBottom: '1.5rem',
+                    background: 'linear-gradient(135deg,#8b6914,#f0d080)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    letterSpacing: '.1em',
+                }}>✦ UMBRA</div>
+                <div style={{
+                    width: 28, height: 28, border: '2px solid #2a1f00',
+                    borderTopColor: '#c9a84c', borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite',
+                }} />
+                <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            </div>
+        );
+    }
 
     // Close sidebar on resize to desktop
     useEffect(() => {
@@ -131,6 +165,8 @@ export default function App() {
                 historyCount={history.length}
                 isOpen={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
+                user={user}
+                onSignOut={signOut}
             />
 
             <div className="app-main">

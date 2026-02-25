@@ -1,4 +1,5 @@
 import React from 'react';
+import type { User } from '@supabase/supabase-js';
 import type { AppView } from '../../types/prompt';
 import './Sidebar.css';
 
@@ -9,6 +10,8 @@ interface SidebarProps {
     historyCount: number;
     isOpen: boolean;
     onClose: () => void;
+    user: User | null;
+    onSignOut: () => void;
 }
 
 type ItemStatus = 'done' | 'active' | 'locked';
@@ -87,12 +90,7 @@ const ITEM_ICON: Record<ItemStatus, string> = {
 
 /* ── Component ──────────────────────────────────── */
 export const Sidebar: React.FC<SidebarProps> = ({
-    activeView,
-    onViewChange,
-    hasApiKey,
-    historyCount,
-    isOpen,
-    onClose,
+    activeView, onViewChange, hasApiKey, historyCount, isOpen, onClose, user, onSignOut,
 }) => {
     return (
         <aside
@@ -176,6 +174,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {/* Footer */}
             <div className="sidebar-footer">
+                {/* User info */}
+                {user && (
+                    <div className="sidebar-user">
+                        <div className="sidebar-user-avatar">
+                            {(user.email?.[0] ?? '?').toUpperCase()}
+                        </div>
+                        <div className="sidebar-user-info">
+                            <span className="sidebar-user-email">
+                                {user.email && user.email.length > 22
+                                    ? user.email.slice(0, 20) + '…'
+                                    : user.email}
+                            </span>
+                            <button className="sidebar-signout-btn" onClick={onSignOut}>
+                                ← Sair
+                            </button>
+                        </div>
+                    </div>
+                )}
                 <div className={`api-status ${hasApiKey ? 'connected' : 'disconnected'}`}>
                     <span className="status-dot" />
                     <span className="status-label">
