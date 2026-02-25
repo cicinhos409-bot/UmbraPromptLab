@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar — Umbra Prompt Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-l: #f0d080;
+            --gold-d: #8b6914;
+            --ink: #1a1208;
+            --parch: #f4e8c1;
+            --parch-d: #e8d49a;
+            --bg: #0d0a05;
+            --panel: #121008;
+            --border: #2a1f00;
+            --red: #8b1a1a;
+            --g10: rgba(201, 168, 76, .1);
+            --g20: rgba(201, 168, 76, .2)
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            font-size: 16px
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--parch);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(ellipse at 20% 30%, rgba(100, 60, 0, .3) 0%, transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(30, 50, 100, .2) 0%, transparent 55%)
+        }
+
+        #cv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: .4
+        }
+
+        nav {
+            position: relative;
+            z-index: 10;
+            padding: 1.2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: .95rem;
+            letter-spacing: .15em;
+            background: linear-gradient(135deg, var(--gold-d), var(--gold-l), var(--gold-d));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: sh 4s linear infinite;
+            text-decoration: none
+        }
+
+        @keyframes sh {
+            0% {
+                background-position: -200% center
+            }
+
+            100% {
+                background-position: 200% center
+            }
+        }
+
+        .back {
+            color: var(--gold-d);
+            font-family: 'Cinzel', serif;
+            font-size: .72rem;
+            letter-spacing: .1em;
+            text-decoration: none;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            transition: .2s
+        }
+
+        .back:hover {
+            color: var(--gold)
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: radial-gradient(ellipse at 30% 20%, rgba(201, 168, 76, .1) 0%, var(--panel) 60%);
+            border: 1px solid rgba(201, 168, 76, .25);
+            border-radius: 6px;
+            padding: 2.8rem;
+            box-shadow: 0 0 50px rgba(201, 168, 76, .08), 0 20px 60px rgba(0, 0, 0, .6)
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(201, 168, 76, .4))
+        }
+
+        .card-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.3rem;
+            text-align: center;
+            letter-spacing: .08em;
+            margin-bottom: .4rem;
+            background: linear-gradient(135deg, var(--gold-d), var(--gold-l));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .card-sub {
+            text-align: center;
+            font-size: .78rem;
+            color: rgba(244, 232, 193, .45);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .05em;
+            margin-bottom: 2rem
+        }
+
+        .divider-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-d), transparent);
+            margin-bottom: 2rem
+        }
+
+        .label {
+            font-family: 'Cinzel', serif;
+            font-size: .68rem;
+            letter-spacing: .12em;
+            color: var(--gold-d);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: .5rem
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 1.3rem
+        }
+
+        .input-wrap input {
+            width: 100%;
+            background: rgba(13, 10, 5, .7);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: .8rem 1rem;
+            color: var(--parch);
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem;
+            outline: none;
+            transition: .2s
+        }
+
+        .input-wrap input:focus {
+            border-color: var(--gold-d);
+            box-shadow: 0 0 10px rgba(201, 168, 76, .1)
+        }
+
+        .input-wrap input::placeholder {
+            color: var(--gold-d);
+            opacity: .3;
+            font-style: italic
+        }
+
+        .eye {
+            position: absolute;
+            right: .8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gold-d);
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: .6;
+            padding: .2rem;
+            transition: .2s
+        }
+
+        .eye:hover {
+            opacity: 1
+        }
+
+        .forgot {
+            display: block;
+            text-align: right;
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            color: var(--gold-d);
+            text-decoration: none;
+            letter-spacing: .06em;
+            margin-top: -.6rem;
+            margin-bottom: 1.5rem;
+            transition: .2s
+        }
+
+        .forgot:hover {
+            color: var(--gold)
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold-d), var(--gold));
+            color: var(--ink);
+            font-family: 'Cinzel', serif;
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(201, 168, 76, .3);
+            transition: .25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem
+        }
+
+        .btn-main:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(201, 168, 76, .45)
+        }
+
+        .btn-main:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .divider-or {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            color: var(--border);
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: .15em
+        }
+
+        .divider-or::before,
+        .divider-or::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .btn-magic {
+            width: 100%;
+            padding: .85rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--parch-d);
+            font-family: 'Cinzel', serif;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: .25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem
+        }
+
+        .btn-magic:hover {
+            border-color: var(--gold-d);
+            color: var(--gold);
+            background: var(--g10)
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: .75rem;
+            color: rgba(244, 232, 193, .45)
+        }
+
+        .register-link a {
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: .7rem;
+            letter-spacing: .06em;
+            transition: .2s
+        }
+
+        .register-link a:hover {
+            color: var(--gold-l)
+        }
+
+        .msg {
+            padding: .7rem 1rem;
+            border-radius: 3px;
+            font-size: .78rem;
+            margin-bottom: 1rem;
+            display: none;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .03em
+        }
+
+        .msg.err {
+            background: rgba(139, 26, 26, .2);
+            border: 1px solid rgba(139, 26, 26, .4);
+            color: #ffaaaa;
+            display: block
+        }
+
+        .msg.ok {
+            background: rgba(26, 92, 42, .2);
+            border: 1px solid rgba(26, 92, 42, .4);
+            color: #a0dcb0;
+            display: block
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(26, 18, 8, .3);
+            border-top-color: var(--ink);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid var(--border)
+        }
+
+        .fc {
+            font-size: .62rem;
+            color: rgba(244, 232, 193, .25);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .04em
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="cv"></canvas>
+    <nav>
+        <a href="landing.html" class="logo">✦ UMBRA</a>
+        <a href="landing.html" class="back">← Voltar</a>
+    </nav>
+    <main>
+        <div class="card">
+            <div class="card-icon">⚗️</div>
+            <div class="card-title">Entrar no Lab</div>
+            <div class="card-sub">// ACESSO AO ESTÚDIO DE ANIME</div>
+            <div class="divider-line"></div>
+
+            <div class="msg" id="msg"></div>
+
+            <form id="form" autocomplete="on">
+                <label class="label" for="email">E-mail</label>
+                <div class="input-wrap">
+                    <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+                </div>
+
+                <label class="label" for="password">Senha</label>
+                <div class="input-wrap">
+                    <input type="password" id="password" placeholder="••••••••" required
+                        autocomplete="current-password">
+                    <button type="button" class="eye" id="eye-btn" onclick="togglePwd()">👁</button>
+                </div>
+
+                <a href="#" class="forgot" id="forgot-link">Esqueci minha senha</a>
+
+                <button type="submit" class="btn-main" id="btn-login">
+                    <div class="spinner" id="sp"></div>
+                    <span id="btn-txt">✦ Entrar no Estúdio →</span>
+                </button>
+            </form>
+
+            <div class="divider-or">ou</div>
+
+            <button class="btn-magic" id="btn-magic-lnk">
+                ✉️ Enviar Link Mágico por E-mail
+            </button>
+
+            <div class="register-link">
+                Ainda não tem acesso? <a href="register.html">Criar conta →</a>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p class="fc">&copy; 2025 Umbra Prompt Lab · Estúdio de Anime com IA</p>
+    </footer>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        const SB_URL = 'https://ywriijfiyfbtodrlhxoy.supabase.co';
+        const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3cmlpamZpeWZidG9kcmxoeG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0NDAzNDksImV4cCI6MjA1NjAxNjM0OX0.O2GJvVTFiYj0dM0XPQR2B9A3wgT1cW_MJVJSjNgjJkg';
+        const sb = createClient(SB_URL, SB_ANON);
+
+        const msg = document.getElementById('msg');
+        const sp = document.getElementById('sp');
+        const btnTxt = document.getElementById('btn-txt');
+        const btnLog = document.getElementById('btn-login');
+
+        function showMsg(text, type) {
+            msg.textContent = text;
+            msg.className = `msg ${type}`;
+        }
+        function setLoading(on) {
+            btnLog.disabled = on;
+            sp.style.display = on ? 'block' : 'none';
+            btnTxt.style.display = on ? 'none' : 'flex';
+        }
+
+        document.getElementById('form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value;
+            setLoading(true);
+            const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+            setLoading(false);
+            if (error) {
+                showMsg('❌ ' + (error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : error.message), 'err');
+            } else {
+                showMsg('✦ Bem-vindo ao Estúdio! Redirecionando...', 'ok');
+                setTimeout(() => { window.location.href = '/'; }, 1200);
+            }
+        });
+
+        document.getElementById('btn-magic-lnk').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            if (!email) { showMsg('❌ Digite seu e-mail primeiro.', 'err'); return; }
+            const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + '/' } });
+            if (error) showMsg('❌ ' + error.message, 'err');
+            else showMsg('✉️ Link mágico enviado! Verifique seu e-mail.', 'ok');
+        });
+
+        document.getElementById('forgot-link').addEventListener('click', async e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            if (!email) { showMsg('❌ Digite seu e-mail para redefinir a senha.', 'err'); return; }
+            const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password' });
+            if (error) showMsg('❌ ' + error.message, 'err');
+            else showMsg('✉️ E-mail de redefinição enviado! Verifique sua caixa.', 'ok');
+        });
+
+        // Già logado? Redireciona
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) window.location.href = '/';
+    </script>
+    <script>
+        function togglePwd() { const i = document.getElementById('password'); i.type = i.type === 'password' ? 'text' : 'password' }
+        /* Particles */
+        const cv = document.getElementById('cv'), ctx = cv.getContext('2d'); cv.width = innerWidth; cv.height = innerHeight;
+        window.addEventListener('resize', () => { cv.width = innerWidth; cv.height = innerHeight });
+        const pts = Array.from({ length: 40 }, () => ({ x: Math.random() * cv.width, y: Math.random() * cv.height, r: Math.random() * 1.2 + .3, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, a: Math.random() * .4 + .08 }));
+        function draw() { ctx.clearRect(0, 0, cv.width, cv.height); pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x = cv.width; if (p.x > cv.width) p.x = 0; if (p.y < 0) p.y = cv.height; if (p.y > cv.height) p.y = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(201,168,76,${p.a})`; ctx.fill() }); requestAnimationFrame(draw) } draw();
+    </script>
+</body>
+
+</html>
