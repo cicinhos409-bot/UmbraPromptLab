@@ -39,6 +39,7 @@ const STAGES: Stage[] = [
         label: 'FUNDAÇÃO',
         stageStatus: 'done',
         items: [
+            { id: 'umbracreator', label: 'Umbra Creator', status: 'active' },
             { id: 'onomancer', label: 'Umbra Onomancer', status: 'done' },
             { id: 'grimorio', label: 'Umbra Personagens', status: 'done' },
             { id: 'sinopses', label: 'Umbra das Sinopses', status: 'done' },

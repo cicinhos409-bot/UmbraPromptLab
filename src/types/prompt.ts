@@ -72,7 +72,7 @@ export interface PresetIdea {
     tags: string[];
 }
 
-export type AppView = 'generator' | 'history' | 'presets' | 'settings' | 'grimorio' | 'isekai' | 'sinopses' | 'voiceforge' | 'onomancer' | 'inicio' | 'perfil' | 'umbravoz';
+export type AppView = 'generator' | 'history' | 'presets' | 'settings' | 'grimorio' | 'isekai' | 'sinopses' | 'voiceforge' | 'onomancer' | 'inicio' | 'perfil' | 'umbravoz' | 'umbracreator';
 
 
 

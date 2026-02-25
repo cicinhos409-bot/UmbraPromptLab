@@ -10,6 +10,7 @@ import { IsekaiPlanner } from './components/IsekaiPlanner/IsekaiPlanner';
 import { VoiceForge } from './components/VoiceForge/VoiceForge';
 import { UmbraOnomancer } from './components/UmbraOnomancer/UmbraOnomancer';
 import { UmbraVoz } from './components/UmbraVoz/UmbraVoz';
+import { UmbraCreator } from './components/UmbraCreator/UmbraCreator';
 import { SinopsesAgent } from './components/SinopsesAgent/SinopsesAgent';
 import { usePromptHistory } from './hooks/usePromptHistory';
 import { useSettings } from './hooks/useSettings';
@@ -101,6 +102,7 @@ export default function App() {
             voiceforge: { title: 'VoiceForge', subtitle: 'Arquitetura vocal para VEO 3 — Powered by Mistral AI' },
             onomancer: { title: 'Umbra Onomancer', subtitle: '7 padrões autênticos · Gerador de nomes de anime' },
             umbravoz: { title: 'Umbra Voz', subtitle: 'Arquitetura vocal para VEO 3 · Chat interativo · Mistral AI' },
+            umbracreator: { title: 'Umbra Creator', subtitle: '39 perguntas · 7 seções · Guia completo para criar seu anime' },
             history: { title: 'Histórico', subtitle: 'Seus prompts salvos' },
             presets: { title: 'Presets', subtitle: 'Inspiração instantânea' },
             settings: { title: 'Configurações', subtitle: 'Personalize o laboratório' },
@@ -283,6 +285,12 @@ export default function App() {
                     {activeView === 'umbravoz' && (
                         <div className="single-col-layout grimorio-col">
                             <UmbraVoz settings={settings} />
+                        </div>
+                    )}
+
+                    {activeView === 'umbracreator' && (
+                        <div className="single-col-layout grimorio-col">
+                            <UmbraCreator settings={settings} />
                         </div>
                     )}
 
