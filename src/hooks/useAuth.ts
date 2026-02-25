@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 import type { User } from '@supabase/supabase-js';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 export interface AuthState {
     user: User | null;
@@ -17,23 +13,33 @@ export function useAuth(): AuthState {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Get initial session
-        sb.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
+        // If there's an access_token in the URL hash (email confirmation redirect),
+        // skip getSession() and wait for onAuthStateChange to fire first —
+        // otherwise the guard would redirect to landing before the session is set.
+        const hasTokenInHash = window.location.hash.includes('access_token');
 
-        // Listen for auth changes
-        const { data: { subscription } } = sb.auth.onAuthStateChange((_event, session) => {
+        if (!hasTokenInHash) {
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                setUser(session?.user ?? null);
+                setLoading(false);
+            });
+        }
+        // If token is in hash, stay loading until onAuthStateChange fires.
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
             setLoading(false);
+            // Clean hash from URL after Supabase processes it
+            if (window.location.hash.includes('access_token')) {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
         });
 
         return () => subscription.unsubscribe();
     }, []);
 
     const signOut = async () => {
-        await sb.auth.signOut();
+        await supabase.auth.signOut();
         window.location.href = '/landing.html';
     };
 
