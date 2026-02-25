@@ -11,44 +11,61 @@ export interface AuthState {
 export function useAuth(): AuthState {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const resolved = useRef(false);
+    const settled = useRef(false);
 
     useEffect(() => {
-        // onAuthStateChange fires INITIAL_SESSION on subscribe (Supabase v2.39+).
-        // For OAuth PKCE redirects (?code=…), Supabase exchanges the code
-        // during client init, then fires SIGNED_IN. We rely on this single
-        // listener for ALL auth scenarios.
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            if (!resolved.current) resolved.current = true;
-            setUser(session?.user ?? null);
+        // Helper: only update state once per resolution to avoid oscillation
+        const resolve = (u: User | null) => {
+            settled.current = true;
+            setUser(u);
             setLoading(false);
+        };
+
+        // 1) Subscribe to future auth changes (token refresh, sign-out, etc.)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            // Skip INITIAL_SESSION — we handle initial resolution ourselves below
+            // to avoid a premature null during PKCE exchange.
+            if (event === 'INITIAL_SESSION') return;
+            resolve(session?.user ?? null);
         });
 
-        // Fallback: if onAuthStateChange doesn't fire within 4s
-        // (e.g. network issue), resolve via getSession so the UI isn't stuck.
-        const fallback = setTimeout(async () => {
-            if (!resolved.current) {
+        // 2) Resolve the initial auth state
+        const init = async () => {
+            try {
+                // If there's a PKCE code in the URL, exchange it first
+                const params = new URLSearchParams(window.location.search);
+                const code = params.get('code');
+
+                if (code) {
+                    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+                    // Clean the URL regardless of outcome
+                    window.history.replaceState(null, '', window.location.pathname);
+                    if (!error && data.session) {
+                        resolve(data.session.user);
+                        return;
+                    }
+                }
+
+                // If there's an access_token hash (email confirmation), let
+                // Supabase process it, then read the resulting session.
+                if (window.location.hash.includes('access_token')) {
+                    // Give Supabase a moment to ingest the hash
+                    await new Promise(r => setTimeout(r, 500));
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+
+                // Normal case or fallback: read current session
                 const { data: { session } } = await supabase.auth.getSession();
-                setUser(session?.user ?? null);
-                setLoading(false);
+                resolve(session?.user ?? null);
+            } catch {
+                // Network error etc. — resolve with no user
+                resolve(null);
             }
-        }, 4000);
-
-        // Clean auth params from URL after Supabase processes them
-        const cleanUrl = setTimeout(() => {
-            if (
-                window.location.hash.includes('access_token') ||
-                new URLSearchParams(window.location.search).has('code')
-            ) {
-                window.history.replaceState(null, '', window.location.pathname);
-            }
-        }, 1500);
-
-        return () => {
-            clearTimeout(fallback);
-            clearTimeout(cleanUrl);
-            subscription.unsubscribe();
         };
+
+        init();
+
+        return () => subscription.unsubscribe();
     }, []);
 
     const signOut = async () => {
@@ -58,3 +75,4 @@ export function useAuth(): AuthState {
 
     return { user, loading, signOut };
 }
+
