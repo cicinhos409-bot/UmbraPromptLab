@@ -15,17 +15,18 @@ export function getDeviceId(): string {
     return id;
 }
 
-// ── Supabase client with x-device-id header for RLS ────────────────
-export function getSupabase() {
-    const deviceId = getDeviceId();
-    return createClient(SUPABASE_URL, SUPABASE_ANON, {
-        global: {
-            headers: {
-                'x-device-id': deviceId,
-            },
+// ── Single Supabase client (with x-device-id header for RLS) ───────
+// IMPORTANT: only ONE client instance to avoid "Multiple GoTrueClient" issues
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
+    global: {
+        headers: {
+            'x-device-id': getDeviceId(),
         },
-    });
+    },
+});
+
+// Alias for backward compatibility — returns the same singleton
+export function getSupabase() {
+    return supabase;
 }
 
-// Default client (no header — use getSupabase() for DB ops)
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
