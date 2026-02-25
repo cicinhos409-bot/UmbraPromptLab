@@ -13,24 +13,27 @@ export function useAuth(): AuthState {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // If there's an access_token in the URL hash (email confirmation redirect),
+        // If there's an access_token in the URL hash (email confirmation)
+        // OR a code in the query string (Google OAuth PKCE flow),
         // skip getSession() and wait for onAuthStateChange to fire first —
         // otherwise the guard would redirect to landing before the session is set.
         const hasTokenInHash = window.location.hash.includes('access_token');
+        const hasCodeInQuery = new URLSearchParams(window.location.search).has('code');
+        const isAuthRedirect = hasTokenInHash || hasCodeInQuery;
 
-        if (!hasTokenInHash) {
+        if (!isAuthRedirect) {
             supabase.auth.getSession().then(({ data: { session } }) => {
                 setUser(session?.user ?? null);
                 setLoading(false);
             });
         }
-        // If token is in hash, stay loading until onAuthStateChange fires.
+        // If auth redirect detected, stay loading until onAuthStateChange fires.
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
             setLoading(false);
-            // Clean hash from URL after Supabase processes it
-            if (window.location.hash.includes('access_token')) {
+            // Clean URL after Supabase processes the auth tokens
+            if (window.location.hash.includes('access_token') || new URLSearchParams(window.location.search).has('code')) {
                 window.history.replaceState(null, '', window.location.pathname);
             }
         });
