@@ -1,0 +1,581 @@
+/* ===================================================
+   Umbra Prompt Lab — Design System
+   Grimoire / Ancient Tome Aesthetic
+   =================================================== */
+
+/* ---------- Google Fonts imported via index.html ---------- */
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+    /* Core Palette */
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8b6914;
+    --ink: #1a1208;
+    --parchment: #f4e8c1;
+    --parchment-dark: #e8d49a;
+    --red: #8b1a1a;
+    --bg: #0d0a05;
+    --panel: #121008;
+    --panel-border: #2a1f00;
+    --green: #1a5c2a;
+    --blue: #1a3a6b;
+
+    /* Derived / Effect Colors */
+    --gold-alpha-10: rgba(201, 168, 76, 0.1);
+    --gold-alpha-20: rgba(201, 168, 76, 0.2);
+    --gold-alpha-40: rgba(201, 168, 76, 0.4);
+    --warm-brown: rgba(100, 60, 0, 0.25);
+    --cool-blue: rgba(30, 50, 100, 0.15);
+
+    /* Typography */
+    --font-title: 'Cinzel Decorative', 'Cinzel', serif;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+    --space-2xl: 64px;
+
+    /* Borders */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Shadows */
+    --shadow-gold: 0 0 20px rgba(201, 168, 76, 0.15);
+    --shadow-glow: 0 0 40px rgba(201, 168, 76, 0.08);
+    --shadow-panel: 0 4px 24px rgba(0, 0, 0, 0.6);
+
+    /* Transitions */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --dur-fast: 150ms;
+    --dur-normal: 280ms;
+    --dur-slow: 500ms;
+
+    /* Sidebar */
+    --sidebar-width: 260px;
+}
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    height: 100%;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(ellipse at 20% 50%, var(--warm-brown) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, var(--cool-blue) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='rgba(201,168,76,0.03)'/%3E%3C/svg%3E");
+    color: var(--parchment);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    #root {
+        height: auto;
+        min-height: 100%;
+    }
+}
+
+#root {
+    height: 100%;
+    display: flex;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--panel);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+/* ---------- Selection ---------- */
+::selection {
+    background: var(--gold-alpha-40);
+    color: var(--gold-light);
+}
+
+/* ---------- Typography Helpers ---------- */
+.font-title {
+    font-family: var(--font-title);
+}
+
+.font-heading {
+    font-family: var(--font-heading);
+}
+
+.font-body {
+    font-family: var(--font-body);
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+.text-gold {
+    color: var(--gold);
+}
+
+.text-gold-light {
+    color: var(--gold-light);
+}
+
+.text-gold-dark {
+    color: var(--gold-dark);
+}
+
+.text-parchment {
+    color: var(--parchment);
+}
+
+.text-muted {
+    color: var(--parchment-dark);
+    opacity: 0.6;
+}
+
+/* ---------- Keyframe Animations ---------- */
+@keyframes flicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes runeRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulseGold {
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(201, 168, 76, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 28px rgba(201, 168, 76, 0.5);
+    }
+}
+
+@keyframes borderFlow {
+    0% {
+        border-color: var(--gold-dark);
+    }
+
+    50% {
+        border-color: var(--gold);
+    }
+
+    100% {
+        border-color: var(--gold-dark);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes typewriterCursor {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ---------- Utility Classes ---------- */
+.fade-in {
+    animation: fadeIn var(--dur-normal) var(--ease-smooth) both;
+}
+
+.fade-in-scale {
+    animation: fadeInScale var(--dur-slow) var(--ease-smooth) both;
+}
+
+.slide-in-left {
+    animation: slideInLeft var(--dur-normal) var(--ease-smooth) both;
+}
+
+.shimmer-text {
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+}
+
+/* ---------- Grimoire Divider ---------- */
+.grimoire-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    color: var(--gold-dark);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.grimoire-divider::before,
+.grimoire-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+}
+
+/* ---------- Panel Card ---------- */
+.panel-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-alpha-10) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* ---------- Gold Button ---------- */
+.btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--ink);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gold::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+}
+
+.btn-gold:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
+}
+
+.btn-gold:hover::after {
+    opacity: 1;
+}
+
+.btn-gold:active {
+    transform: translateY(0);
+}
+
+.btn-gold:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ---------- Ghost Button ---------- */
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 8px 14px;
+    background: transparent;
+    color: var(--gold);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--gold-dark);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-smooth);
+}
+
+.btn-ghost:hover {
+    background: var(--gold-alpha-10);
+    border-color: var(--gold);
+    color: var(--gold-light);
+}
+
+/* ---------- Icon Button ---------- */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    color: var(--gold-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-smooth);
+    font-size: 14px;
+}
+
+.btn-icon:hover {
+    background: var(--gold-alpha-10);
+    border-color: var(--gold-dark);
+    color: var(--gold);
+}
+
+/* ---------- Input / Textarea ---------- */
+.input-grimoire {
+    width: 100%;
+    background: rgba(13, 10, 5, 0.8);
+    color: var(--parchment);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    outline: none;
+    transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+    resize: none;
+}
+
+.input-grimoire::placeholder {
+    color: var(--gold-dark);
+    opacity: 0.6;
+}
+
+.input-grimoire:focus {
+    border-color: var(--gold-dark);
+    box-shadow: 0 0 0 3px var(--gold-alpha-10), inset 0 0 10px rgba(201, 168, 76, 0.05);
+}
+
+/* ---------- Tag / Badge ---------- */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: var(--gold-alpha-10);
+    color: var(--gold);
+    border: 1px solid var(--gold-dark);
+    border-radius: 999px;
+    font-size: 11px;
+    font-family: var(--font-heading);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* ---------- Tooltip ---------- */
+.tooltip-wrapper {
+    position: relative;
+}
+
+.tooltip-wrapper .tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel);
+    color: var(--parchment);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    padding: 4px 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast);
+    z-index: 100;
+}
+
+.tooltip-wrapper:hover .tooltip {
+    opacity: 1;
+}
+
+/* ---------- Rune Spinner ---------- */
+.rune-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--gold-dark);
+    border-top-color: var(--gold-light);
+    border-radius: 50%;
+    animation: runeRotate 0.8s linear infinite;
+}
+
+/* ---------- Scrollable Area ---------- */
+.scroll-area {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+/* ---------- Ornament Corners ---------- */
+.ornament-box {
+    position: relative;
+}
+
+.ornament-box::before,
+.ornament-box::after {
+    content: '✦';
+    position: absolute;
+    color: var(--gold-dark);
+    font-size: 10px;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.ornament-box::before {
+    top: -6px;
+    left: -6px;
+}
+
+.ornament-box::after {
+    top: -6px;
+    right: -6px;
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--gold-dark);
+    opacity: 0.7;
+}
+
+.empty-state .empty-icon {
+    font-size: 48px;
+    opacity: 0.4;
+    animation: flicker 4s ease-in-out infinite;
+}
+
+.empty-state .empty-title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--gold-dark);
+}
+
+.empty-state .empty-sub {
+    font-size: 12px;
+    color: var(--parchment-dark);
+    opacity: 0.5;
+    max-width: 240px;
+}

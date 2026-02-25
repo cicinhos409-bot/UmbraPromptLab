@@ -1,0 +1,453 @@
+/* =============================================
+   IsekaiPlanner — Anime Isekai Planner CSS
+   ============================================= */
+
+.ip-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    padding-bottom: 60px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    color: var(--parchment);
+}
+
+.ip-wrap::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ip-wrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ip-wrap::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 2px;
+}
+
+/* ─── Header ─── */
+.ip-header {
+    text-align: center;
+    padding: 40px 20px 24px;
+    position: relative;
+}
+
+.ip-pre-title {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.ip-h1 {
+    font-family: var(--font-title);
+    font-size: clamp(22px, 3.5vw, 40px);
+    color: var(--gold-light);
+    text-shadow: 0 0 40px rgba(201, 168, 76, 0.35), 0 2px 6px rgba(0, 0, 0, 0.9);
+    line-height: 1.25;
+    margin-bottom: 10px;
+}
+
+.ip-sub {
+    color: var(--gold-dark);
+    font-size: 15px;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    opacity: 0.8;
+}
+
+.ip-divider {
+    width: 300px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 20px auto;
+    position: relative;
+}
+
+.ip-divider::before {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gold);
+    background: var(--panel);
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+/* ─── Setup ─── */
+.ip-setup {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.ip-card {
+    background: rgba(201, 168, 76, 0.04);
+    border: 1px solid var(--panel-border);
+    border-top: 2px solid var(--gold-dark);
+    padding: 28px;
+    margin-bottom: 28px;
+}
+
+.ip-card-title {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ip-card-title::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+}
+
+.ip-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+@media (max-width: 560px) {
+    .ip-field-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ip-field-full {
+    margin-bottom: 14px;
+}
+
+.ip-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.ip-input,
+.ip-select,
+.ip-textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--gold-dark);
+    color: var(--parchment);
+    font-family: var(--font-body);
+    font-size: 15px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color var(--dur-fast), background var(--dur-fast);
+    border-radius: 2px;
+}
+
+.ip-input:focus,
+.ip-select:focus,
+.ip-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(201, 168, 76, 0.04);
+}
+
+.ip-select option {
+    background: #1a1208;
+}
+
+.ip-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.ip-hint {
+    font-size: 12px;
+    color: rgba(201, 168, 76, 0.4);
+    font-style: italic;
+    margin-top: 4px;
+}
+
+/* ─── Generate button ─── */
+.ip-gen-wrap {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.ip-gen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #2a1a00, #6b4400, #2a1a00);
+    border: 2px solid var(--gold);
+    color: var(--gold-light);
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    padding: 18px 48px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 0 30px rgba(201, 168, 76, 0.2);
+    transition: all 0.3s;
+    clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
+}
+
+.ip-gen-btn:hover {
+    background: linear-gradient(135deg, #3d2600, #8b5c00, #3d2600);
+    box-shadow: 0 0 50px rgba(201, 168, 76, 0.45);
+    transform: translateY(-2px);
+}
+
+.ip-btn-icon {
+    font-size: 18px;
+    animation: ip-spin 4s linear infinite;
+}
+
+@keyframes ip-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Progress ─── */
+.ip-progress-wrap {
+    max-width: 820px;
+    margin: 0 auto 32px;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.ip-progress-header {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dark);
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.ip-progress-bg {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.ip-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.ip-progress-label {
+    font-size: 13px;
+    color: var(--gold-dark);
+    text-align: center;
+    font-style: italic;
+    min-height: 20px;
+}
+
+/* ─── Output / Sections ─── */
+.ip-output {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.ip-section {
+    margin-bottom: 36px;
+    animation: fadeIn 0.4s ease both;
+}
+
+.ip-sec-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(201, 168, 76, 0.1), transparent);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    margin-bottom: 0;
+}
+
+.ip-sec-emoji {
+    font-size: 20px;
+}
+
+.ip-sec-title {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    flex: 1;
+}
+
+.ip-sec-count {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    color: var(--gold-dark);
+    letter-spacing: 0.1em;
+}
+
+.ip-qa-list {
+    border: 1px solid var(--panel-border);
+    border-top: none;
+}
+
+.ip-qa-item {
+    border-bottom: 1px solid rgba(201, 168, 76, 0.07);
+}
+
+.ip-qa-item:last-child {
+    border-bottom: none;
+}
+
+.ip-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px 10px;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.ip-qnum {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    color: var(--gold-dark);
+    padding-top: 2px;
+    min-width: 22px;
+    flex-shrink: 0;
+}
+
+.ip-qtext {
+    font-size: 15px;
+    color: rgba(244, 232, 193, 0.7);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.ip-answer {
+    padding: 12px 18px 14px 52px;
+    font-size: 16px;
+    color: var(--parchment);
+    line-height: 1.75;
+    font-weight: 300;
+    min-height: 28px;
+}
+
+.ip-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 15px;
+    background: var(--gold);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: ip-blink 0.8s ease-in-out infinite;
+}
+
+@keyframes ip-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.ip-tip-box {
+    background: rgba(201, 168, 76, 0.05);
+    border-left: 2px solid var(--gold-dark);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: rgba(201, 168, 76, 0.55);
+    font-style: italic;
+}
+
+/* ─── Export ─── */
+.ip-export-wrap {
+    text-align: center;
+    padding: 16px 0 40px;
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+.ip-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    padding: 11px 26px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all var(--dur-fast);
+    margin: 6px;
+}
+
+.ip-export-btn:hover {
+    background: rgba(201, 168, 76, 0.08);
+    border-color: var(--gold);
+}
+
+.ip-export-btn.ip-abort {
+    border-color: #5a1a1a;
+    color: #e07070;
+}
+
+.ip-export-btn.ip-abort:hover {
+    background: rgba(139, 26, 26, 0.12);
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 480px) {
+    .ip-header {
+        padding: 28px 14px 16px;
+    }
+
+    .ip-card {
+        padding: 18px;
+    }
+
+    .ip-gen-btn {
+        padding: 14px 28px;
+        font-size: 12px;
+    }
+
+    .ip-answer {
+        padding-left: 18px;
+        font-size: 15px;
+    }
+
+    .ip-section {
+        margin-bottom: 24px;
+    }
+}

@@ -1,0 +1,106 @@
+.presets-panel {
+    padding: var(--space-lg);
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.panel-header-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.panel-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+}
+
+.panel-desc {
+    font-size: 12px;
+    color: var(--parchment-dark);
+    opacity: 0.6;
+}
+
+.presets-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.preset-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--dur-normal) var(--ease-smooth);
+    animation: fadeIn var(--dur-normal) var(--ease-smooth) both;
+    width: 100%;
+}
+
+.preset-card:hover {
+    border-color: var(--gold-dark);
+    background: var(--gold-alpha-10);
+    transform: translateX(4px);
+}
+
+.preset-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 42px;
+    text-align: center;
+}
+
+.preset-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.preset-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+}
+
+.preset-idea {
+    font-size: 11px;
+    color: var(--parchment-dark);
+    opacity: 0.7;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.preset-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.preset-arrow {
+    font-size: 16px;
+    color: var(--gold-dark);
+    flex-shrink: 0;
+    transition: transform var(--dur-fast);
+}
+
+.preset-card:hover .preset-arrow {
+    color: var(--gold);
+    transform: translateX(3px);
+}

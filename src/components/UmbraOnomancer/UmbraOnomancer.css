@@ -1,0 +1,659 @@
+/* =========================================
+   UmbraOnomancer.css
+   ========================================= */
+
+:root {
+    --ono-gold: #c9a84c;
+    --ono-gold-light: #f0d080;
+    --ono-gold-dark: #8b6914;
+    --ono-parch: #f4e8c1;
+    --ono-parch-dark: #e8d49a;
+    --ono-panel: #121008;
+    --ono-border: #2a1f00;
+    --ono-bg: #0d0a05;
+    --ono-red: #8b1a1a;
+    --ono-green: #1a5c2a;
+}
+
+/* ─── Root layout ─── */
+.ono-wrap {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    min-height: 100%;
+    padding: 0 0 32px;
+    align-items: flex-start;
+    background: linear-gradient(135deg, rgba(100, 60, 0, .18) 0%, var(--ono-bg) 55%, rgba(30, 50, 100, .1) 100%);
+    background-color: var(--ono-bg);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: var(--ono-parch);
+}
+
+/* ─── Sidebar ─── */
+.ono-sdb {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.ono-sdb::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ono-sdb::-webkit-scrollbar-thumb {
+    background: var(--ono-border);
+    border-radius: 2px;
+}
+
+.ono-sdb-title {
+    color: var(--ono-gold-light);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--ono-gold-dark);
+    padding-bottom: 6px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.ono-mode-btn {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-gold);
+    color: var(--ono-gold-light);
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: left;
+    transition: all .25s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ono-mode-btn:hover {
+    background: linear-gradient(135deg, var(--ono-gold-dark) 0%, var(--ono-gold) 100%);
+    color: var(--ono-parch);
+    transform: translateX(4px);
+}
+
+.ono-favs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.ono-fav-empty {
+    color: var(--ono-parch-dark);
+    font-size: 12px;
+    text-align: center;
+    padding: 12px 0;
+    opacity: .7;
+}
+
+.ono-fav-item {
+    background: rgba(201, 168, 76, .08);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--ono-parch);
+    cursor: pointer;
+    border-left: 2px solid var(--ono-gold);
+    transition: all .2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ono-fav-item:hover {
+    background: rgba(201, 168, 76, .18);
+    transform: translateX(2px);
+}
+
+.ono-export-btn {
+    background: var(--ono-green);
+    border: 1px solid #2a7c3a;
+    color: var(--ono-parch);
+    padding: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    transition: all .2s;
+    margin-top: 6px;
+}
+
+.ono-export-btn:hover {
+    background: #2a7c3a;
+    transform: scale(1.02);
+}
+
+/* ─── Main ─── */
+.ono-main {
+    flex: 1;
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 600px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .45), inset 0 0 40px rgba(201, 168, 76, .04);
+}
+
+/* Header */
+.ono-hdr {
+    background: linear-gradient(135deg, var(--ono-gold-dark) 0%, var(--ono-gold) 100%);
+    padding: 18px 22px;
+    text-align: center;
+    border-bottom: 1px solid var(--ono-gold);
+    box-shadow: 0 2px 10px rgba(201, 168, 76, .25);
+}
+
+.ono-hdr-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ono-parch);
+    margin-bottom: 4px;
+}
+
+.ono-hdr-sub {
+    font-size: 11px;
+    color: rgba(244, 232, 193, .85);
+    letter-spacing: .02em;
+}
+
+/* Tabs */
+.ono-tabs {
+    display: flex;
+    background: var(--ono-bg);
+    border-bottom: 1px solid var(--ono-border);
+}
+
+.ono-tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: var(--ono-panel);
+    border: none;
+    color: var(--ono-gold);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .25s;
+    border-bottom: 3px solid transparent;
+}
+
+.ono-tab.active {
+    background: var(--ono-bg);
+    color: var(--ono-gold-light);
+    border-bottom-color: var(--ono-gold);
+}
+
+.ono-tab:hover:not(.active) {
+    background: rgba(201, 168, 76, .08);
+}
+
+/* ─── Chat area ─── */
+.ono-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    background: var(--ono-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 400px;
+}
+
+.ono-chat::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ono-chat::-webkit-scrollbar-track {
+    background: var(--ono-bg);
+}
+
+.ono-chat::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--ono-gold-dark), var(--ono-gold));
+    border-radius: 4px;
+    border: 2px solid var(--ono-bg);
+}
+
+/* Messages */
+.ono-msg {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    animation: onoSlide .3s ease both;
+}
+
+.ono-msg-user {
+    flex-direction: row-reverse;
+}
+
+@keyframes onoSlide {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ono-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ono-gold-dark), var(--ono-gold));
+    border: 2px solid var(--ono-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(201, 168, 76, .35);
+}
+
+.ono-av-user {
+    background: var(--ono-border);
+    border-color: var(--ono-border);
+    font-size: 13px;
+    color: var(--ono-gold);
+}
+
+.ono-msg-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 78%;
+}
+
+.ono-msg-user .ono-msg-body {
+    align-items: flex-end;
+}
+
+.ono-bubble {
+    padding: 10px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.ono-bubble-bot {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-bottom-left-radius: 4px;
+    color: var(--ono-parch);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
+}
+
+.ono-bubble-user {
+    background: linear-gradient(135deg, var(--ono-gold-dark), var(--ono-gold));
+    border: 1px solid var(--ono-gold);
+    border-bottom-right-radius: 4px;
+    color: var(--ono-parch);
+    font-style: italic;
+}
+
+/* Options */
+.ono-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ono-opt-btn {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-gold);
+    color: var(--ono-gold-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .25s;
+    font-weight: 500;
+}
+
+.ono-opt-btn:hover {
+    background: linear-gradient(135deg, var(--ono-gold-dark), var(--ono-gold));
+    color: var(--ono-parch);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(201, 168, 76, .45);
+}
+
+/* Text input */
+.ono-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ono-text-input {
+    padding: 9px 14px;
+    background: var(--ono-bg);
+    border: 1px solid var(--ono-gold-dark);
+    border-radius: 8px;
+    color: var(--ono-parch);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+}
+
+.ono-text-input::placeholder {
+    color: var(--ono-gold-dark);
+}
+
+.ono-text-input:focus {
+    border-color: var(--ono-gold);
+    box-shadow: 0 0 8px rgba(201, 168, 76, .25);
+}
+
+.ono-text-hint {
+    font-size: 11px;
+    color: var(--ono-gold-dark);
+    opacity: .75;
+}
+
+/* Generated names */
+.ono-names {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.ono-name-card {
+    background: var(--ono-panel);
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--ono-border);
+    border-left: 3px solid var(--ono-gold);
+    transition: all .25s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
+.ono-name-card:hover {
+    background: rgba(201, 168, 76, .08);
+    border-left-color: var(--ono-gold-light);
+    transform: translateX(4px);
+    box-shadow: 0 4px 8px rgba(201, 168, 76, .25);
+}
+
+.ono-name-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.ono-name-title {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+}
+
+.ono-badge {
+    display: inline-block;
+    font-size: 10px;
+    background: rgba(201, 168, 76, .18);
+    color: var(--ono-gold-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.ono-acts {
+    display: flex;
+    gap: 6px;
+}
+
+.ono-act-btn {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-gold-dark);
+    color: var(--ono-gold);
+    padding: 4px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all .2s;
+}
+
+.ono-act-btn:hover {
+    background: var(--ono-gold-dark);
+    color: var(--ono-parch);
+}
+
+.ono-act-btn.active {
+    background: var(--ono-gold-dark);
+    color: var(--ono-gold-light);
+}
+
+.ono-synopsis {
+    font-size: 12px;
+    color: var(--ono-parch-dark);
+    font-style: italic;
+    padding-top: 6px;
+    border-top: 1px solid var(--ono-border);
+}
+
+.ono-restart-btn {
+    align-self: flex-start;
+    margin-top: 8px;
+    background: var(--ono-red);
+    color: var(--ono-parch);
+    border: 1px solid #a52a2a;
+    padding: 9px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all .25s;
+    font-size: 13px;
+}
+
+.ono-restart-btn:hover {
+    background: #a52a2a;
+    transform: scale(1.04);
+}
+
+/* Typing indicator */
+.ono-typing {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-radius: 16px;
+    width: fit-content;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
+}
+
+.ono-typing span {
+    width: 7px;
+    height: 7px;
+    background: var(--ono-gold);
+    border-radius: 50%;
+    animation: onoBounce 1.3s infinite;
+}
+
+.ono-typing span:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.ono-typing span:nth-child(3) {
+    animation-delay: .4s;
+}
+
+@keyframes onoBounce {
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-8px);
+    }
+}
+
+/* ─── Examples ─── */
+.ono-ex-area {
+    overflow-y: auto;
+}
+
+.ono-ex-hdr {
+    padding: 14px 0 10px;
+}
+
+.ono-ex-title-hdr {
+    color: var(--ono-gold-light);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ono-pattern-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ono-ptag {
+    font-size: 11px;
+    background: rgba(201, 168, 76, .1);
+    color: var(--ono-gold);
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--ono-gold-dark);
+}
+
+.ono-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.ono-ex-card {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-radius: 8px;
+    padding: 13px 14px;
+    cursor: pointer;
+    transition: all .25s;
+}
+
+.ono-ex-card:hover {
+    background: rgba(201, 168, 76, .08);
+    border-color: var(--ono-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(201, 168, 76, .25);
+}
+
+.ono-ex-name {
+    color: var(--ono-gold-light);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.ono-ex-rating {
+    color: var(--ono-parch-dark);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.ono-ex-pat {
+    font-size: 11px;
+    color: var(--ono-gold);
+}
+
+/* ─── History ─── */
+.ono-hist-hdr {
+    color: var(--ono-gold-light);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.ono-no-hist {
+    text-align: center;
+    padding: 32px;
+    color: var(--ono-parch-dark);
+}
+
+.ono-no-hist-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: .5;
+}
+
+.ono-hist-item {
+    background: var(--ono-panel);
+    border: 1px solid var(--ono-border);
+    border-left: 3px solid var(--ono-gold);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all .25s;
+    margin-bottom: 10px;
+}
+
+.ono-hist-item:hover {
+    background: rgba(201, 168, 76, .08);
+    transform: translateX(4px);
+}
+
+.ono-hist-date {
+    color: var(--ono-gold-dark);
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.ono-hist-info {
+    color: var(--ono-parch-dark);
+    font-size: 13px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 860px) {
+    .ono-wrap {
+        flex-direction: column;
+    }
+
+    .ono-sdb {
+        width: 100%;
+        position: static;
+        max-height: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .ono-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .ono-opt-btn {
+        font-size: 12px;
+        padding: 7px 12px;
+    }
+}

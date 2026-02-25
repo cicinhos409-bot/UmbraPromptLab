@@ -1,0 +1,120 @@
+.history-panel {
+    padding: var(--space-lg);
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row !important;
+}
+
+.clear-btn {
+    font-size: 11px;
+    border-color: #3a1a1a;
+    color: #c07878;
+}
+
+.clear-btn:hover {
+    background: rgba(139, 26, 26, 0.1);
+    border-color: var(--red);
+    color: var(--parchment);
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.history-item {
+    display: flex;
+    align-items: stretch;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    animation: fadeIn var(--dur-normal) var(--ease-smooth) both;
+    transition: border-color var(--dur-fast);
+}
+
+.history-item:hover {
+    border-color: var(--gold-dark);
+}
+
+.history-item-main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    flex: 1;
+    color: var(--parchment);
+    transition: background var(--dur-fast);
+}
+
+.history-item-main:hover {
+    background: var(--gold-alpha-10);
+}
+
+.history-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.history-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.history-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-meta {
+    font-size: 10px;
+    color: var(--gold-dark);
+    font-family: var(--font-heading);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.history-preview {
+    font-size: 11px;
+    color: var(--parchment-dark);
+    opacity: 0.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-delete {
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid var(--panel-border);
+    width: 38px;
+    height: auto;
+    color: #6b3a3a;
+}
+
+.history-delete:hover {
+    background: rgba(139, 26, 26, 0.15);
+    border-color: var(--red);
+    color: var(--red);
+}

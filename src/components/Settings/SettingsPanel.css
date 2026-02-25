@@ -1,0 +1,239 @@
+.settings-panel {
+    padding: var(--space-lg);
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.settings-hint {
+    font-size: 12px;
+    color: var(--parchment-dark);
+    opacity: 0.6;
+}
+
+.settings-link {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dark);
+    transition: color var(--dur-fast);
+}
+
+.settings-link:hover {
+    color: var(--gold-light);
+}
+
+/* --- API Key Row --- */
+.api-key-row {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.key-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.key-input {
+    padding-right: 40px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.key-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.6;
+    transition: opacity var(--dur-fast);
+    padding: 4px;
+}
+
+.key-toggle:hover {
+    opacity: 1;
+}
+
+.save-key-btn {
+    padding: 10px 16px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.save-key-btn.saved {
+    background: linear-gradient(135deg, #1a5c2a, #4caf74);
+}
+
+.key-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 11px;
+    font-family: var(--font-heading);
+    color: #4caf74;
+    letter-spacing: 0.08em;
+}
+
+/* --- Model List --- */
+.model-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.model-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(13, 10, 5, 0.5);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--dur-fast);
+    width: 100%;
+    color: var(--parchment);
+    opacity: 0.7;
+}
+
+.model-card:hover {
+    border-color: var(--gold-dark);
+    opacity: 0.9;
+}
+
+.model-card.active {
+    border-color: var(--gold);
+    background: var(--gold-alpha-10);
+    opacity: 1;
+}
+
+.model-radio {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color var(--dur-fast);
+}
+
+.model-card.active .model-radio {
+    border-color: var(--gold);
+}
+
+.radio-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+}
+
+.model-card.active .radio-dot {
+    opacity: 1;
+}
+
+.model-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.model-name {
+    font-size: 13px;
+    font-family: var(--font-heading);
+    color: var(--parchment);
+    letter-spacing: 0.03em;
+}
+
+.model-desc {
+    font-size: 11px;
+    color: var(--gold-dark);
+    opacity: 0.8;
+}
+
+/* --- Toggle --- */
+.toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.toggle-track {
+    width: 42px;
+    height: 22px;
+    background: var(--panel-border);
+    border-radius: 999px;
+    position: relative;
+    transition: background var(--dur-fast);
+    border: 1px solid var(--panel-border);
+}
+
+.toggle-btn.on .toggle-track {
+    background: var(--gold-dark);
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--parchment-dark);
+    transition: transform var(--dur-fast), background var(--dur-fast);
+}
+
+.toggle-btn.on .toggle-thumb {
+    transform: translateX(20px);
+    background: var(--gold-light);
+}
+
+.toggle-label {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--gold-dark);
+}
+
+/* --- About --- */
+.settings-about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-top: auto;
+    padding-bottom: var(--space-xl);
+}
+
+.about-text {
+    font-size: 12px;
+    color: var(--parchment-dark);
+    opacity: 0.6;
+    line-height: 1.6;
+}
