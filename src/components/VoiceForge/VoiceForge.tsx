@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './VoiceForge.css';
 
 /* ─── Types ─── */
@@ -52,27 +53,8 @@ const QUESTIONS = [
     },
 ];
 
-/* ─── Mistral API ─── */
-async function callMistral(apiKey: string, system: string, user: string): Promise<string> {
-    const resp = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify({
-            model: 'mistral-large-latest',
-            temperature: 0.4,
-            max_tokens: 3000,
-            messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-        }),
-    });
-    if (!resp.ok) {
-        const err = await resp.json().catch(() => ({})) as { message?: string };
-        throw new Error(err.message ?? `Erro ${resp.status}`);
-    }
-    const data = await resp.json() as { choices: { message: { content: string } }[] };
-    return data.choices[0].message.content;
-}
-
-async function generateProfileMistral(apiKey: string, c: Collected): Promise<VoiceProfile> {
+/* ─── Mistral API (via server proxy) ─── */
+async function generateProfileMistral(c: Collected): Promise<VoiceProfile> {
     const system = `Você é um especialista em fonoaudiologia, acústica vocal e design de personagens para vídeos gerados por IA (VEO 3 do Google). Gere perfis vocais técnicos extremamente detalhados e precisos. Responda APENAS com JSON válido, sem markdown, sem comentários.`;
     const user = `Gere um perfil vocal técnico completo para:
 - Gênero vocal: ${c.genero}
@@ -94,7 +76,12 @@ Retorne APENAS este JSON preenchido (sem markdown):
   "assinatura_vocal": { "marca_sonora":"","padrao_pausa_exclusivo":"","frase_iconica":"${c.frase}","descricao_cinematografica":"" },
   "parametros_fixos_consistencia": { "pitch_central":"","variacao_maxima_permitida":"","velocidade_padrao_wpm":0,"nivel_fixo_ar":0.0,"nivel_fixo_rouquidao":0.0,"instrucao_veo3_curta":"","instrucao_veo3_completa":"" }
 }`;
-    const raw = await callMistral(apiKey, system, user);
+    const raw = await callMistralProxy({
+        model: 'mistral-large-latest',
+        temperature: 0.4,
+        max_tokens: 3000,
+        messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+    });
     return JSON.parse(raw.replace(/```json|```/g, '').trim()) as VoiceProfile;
 }
 
@@ -247,7 +234,7 @@ Character says: "${p._frase_referencia}"
 /* ─── Component ─── */
 interface VoiceForgeProps { settings: AppSettings }
 
-export const VoiceForge: React.FC<VoiceForgeProps> = ({ settings }) => {
+export const VoiceForge: React.FC<VoiceForgeProps> = () => {
     const emptyCollected: Collected = { genero: '', idade: '', regiao: '', frase: '' };
 
     const [messages, setMessages] = useState<ChatMsg[]>([]);
@@ -368,17 +355,11 @@ Confirma? Digite <strong>sim</strong> para conjurar o perfil, ou diga o que prec
         setInputEnabled(false);
         addMsg(`<span class="vf-thinking">✦ Consultando os arquivos da Mistral AI...</span>`);
         let generatedProfile: VoiceProfile;
-        if (settings.apiKey) {
-            try {
-                generatedProfile = await generateProfileMistral(settings.apiKey, collectedRef.current);
-            } catch (err) {
-                const msg = err instanceof Error ? err.message : 'Erro inesperado';
-                addMsg(`⚠️ <strong>Erro Mistral:</strong> ${msg}<br><br>Gerando com motor local como fallback...`);
-                generatedProfile = generateProfileLocal(collectedRef.current);
-            }
-        } else {
-            addMsg('⚠️ <strong>API Key não configurada.</strong> Gerando com motor local...');
-            await new Promise(r => setTimeout(r, 600));
+        try {
+            generatedProfile = await generateProfileMistral(collectedRef.current);
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : 'Erro inesperado';
+            addMsg(`⚠️ <strong>Erro Mistral:</strong> ${msg}<br><br>Gerando com motor local como fallback...`);
             generatedProfile = generateProfileLocal(collectedRef.current);
         }
         finishGeneration(generatedProfile);
@@ -641,10 +622,9 @@ Diga qual está errado e o valor correto, depois confirme com <strong>sim</stron
                     <div className="vf-panel-box">
                         <div className="vf-panel-title">Status da API</div>
                         <div className="vf-api-status-row">
-                            <div className={`vf-api-dot ${settings.apiKey ? 'ok' : 'err'}`} />
-                            <span className="vf-api-status-txt">{settings.apiKey ? 'Chave ativa — Mistral AI pronto' : 'Sem chave — usando motor local'}</span>
+                            <div className="vf-api-dot ok" />
+                            <span className="vf-api-status-txt">✦ Mistral AI ativo</span>
                         </div>
-                        {!settings.apiKey && <p className="vf-api-hint">Configure em ⚙ Configurações para usar a IA completa.</p>}
                     </div>
 
                     {/* Saved voices */}

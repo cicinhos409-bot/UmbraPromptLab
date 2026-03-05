@@ -11,18 +11,27 @@ export interface AuthState {
 export function useAuth(): AuthState {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const settled = useRef(false);
+    const initRan = useRef(false);
+    const resolved = useRef(false);
+    const currentUserId = useRef<string | null>(null);
 
     useEffect(() => {
-        // Helper: only update state once per resolution to avoid oscillation
+        let isMounted = true;
+
         const resolve = (u: User | null) => {
-            settled.current = true;
+            if (!isMounted) return;
+            // Prevent redundant state updates that cause re-render loops
+            const newId = u?.id ?? null;
+            if (resolved.current && currentUserId.current === newId) return;
+            resolved.current = true;
+            currentUserId.current = newId;
             setUser(u);
             setLoading(false);
         };
 
         // 1) Subscribe to future auth changes (token refresh, sign-out, etc.)
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (!isMounted) return;
             // Skip INITIAL_SESSION — we handle initial resolution ourselves below
             // to avoid a premature null during PKCE exchange.
             if (event === 'INITIAL_SESSION') return;
@@ -36,14 +45,16 @@ export function useAuth(): AuthState {
                 const params = new URLSearchParams(window.location.search);
                 const code = params.get('code');
 
-                if (code) {
-                    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-                    // Clean the URL regardless of outcome
+                if (code && !initRan.current) {
+                    initRan.current = true;
+                    // Clean the URL immediately to prevent re-processing
                     window.history.replaceState(null, '', window.location.pathname);
+                    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
                     if (!error && data.session) {
                         resolve(data.session.user);
                         return;
                     }
+                    // If exchange fails, fall through to getSession
                 }
 
                 // If there's an access_token hash (email confirmation), let
@@ -51,13 +62,15 @@ export function useAuth(): AuthState {
                 if (window.location.hash.includes('access_token')) {
                     // Give Supabase a moment to ingest the hash
                     await new Promise(r => setTimeout(r, 500));
+                    if (!isMounted) return;
                     window.history.replaceState(null, '', window.location.pathname);
                 }
 
                 // Normal case or fallback: read current session
                 const { data: { session } } = await supabase.auth.getSession();
                 resolve(session?.user ?? null);
-            } catch {
+            } catch (err) {
+                console.error('[useAuth] init error:', err);
                 // Network error etc. — resolve with no user
                 resolve(null);
             }
@@ -65,7 +78,10 @@ export function useAuth(): AuthState {
 
         init();
 
-        return () => subscription.unsubscribe();
+        return () => {
+            isMounted = false;
+            subscription.unsubscribe();
+        };
     }, []);
 
     const signOut = async () => {
@@ -75,4 +91,3 @@ export function useAuth(): AuthState {
 
     return { user, loading, signOut };
 }
-

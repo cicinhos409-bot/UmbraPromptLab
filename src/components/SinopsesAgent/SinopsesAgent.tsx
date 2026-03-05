@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './SinopsesAgent.css';
 
 /* ─── Types ─── */
@@ -46,7 +47,7 @@ const EXAMPLES = [
 
 interface SinopsesAgentProps { settings: AppSettings }
 
-export const SinopsesAgent: React.FC<SinopsesAgentProps> = ({ settings }) => {
+export const SinopsesAgent: React.FC<SinopsesAgentProps> = () => {
     const [messages, setMessages] = useState<ChatMsg[]>([
         {
             role: 'bot',
@@ -75,11 +76,6 @@ export const SinopsesAgent: React.FC<SinopsesAgentProps> = ({ settings }) => {
         const text = input.trim();
         if (!text || loading) return;
 
-        if (!settings.apiKey) {
-            alert('Configure sua API Key Mistral nas Configurações (⚙).');
-            return;
-        }
-
         setMessages(prev => [...prev, { role: 'user', text }]);
         historyRef.current.push({ role: 'user', content: text });
         setInput('');
@@ -87,27 +83,15 @@ export const SinopsesAgent: React.FC<SinopsesAgentProps> = ({ settings }) => {
         setLoading(true);
 
         try {
-            const resp = await fetch('https://api.mistral.ai/v1/chat/completions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${settings.apiKey}` },
-                body: JSON.stringify({
-                    model: 'mistral-large-latest',
-                    max_tokens: 800,
-                    messages: [
-                        { role: 'system', content: SYSTEM_PROMPT },
-                        ...FEW_SHOT,
-                        ...historyRef.current,
-                    ],
-                }),
+            const reply = await callMistralProxy({
+                model: 'mistral-large-latest',
+                max_tokens: 800,
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    ...FEW_SHOT,
+                    ...historyRef.current,
+                ],
             });
-
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                throw new Error((err as { message?: string }).message ?? `Erro ${resp.status}`);
-            }
-
-            const data = await resp.json() as { choices: { message: { content: string } }[] };
-            const reply = data.choices[0].message.content.trim();
             historyRef.current.push({ role: 'assistant', content: reply });
             const isDesc = reply.length > 150;
             setMessages(prev => [...prev, { role: 'bot', text: reply, isDescription: isDesc }]);
@@ -117,7 +101,7 @@ export const SinopsesAgent: React.FC<SinopsesAgentProps> = ({ settings }) => {
         } finally {
             setLoading(false);
         }
-    }, [input, loading, settings.apiKey]);
+    }, [input, loading]);
 
     const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -167,9 +151,9 @@ export const SinopsesAgent: React.FC<SinopsesAgentProps> = ({ settings }) => {
                 <div className="sa-chat-header">
                     <div className="sa-status-dot" />
                     <span>Escriba Arcano · Aguardando sua sinopse</span>
-                    <div className={`sa-api-badge ${settings.apiKey ? 'active' : ''}`}>
+                    <div className="sa-api-badge active">
                         <div className="sa-badge-dot" />
-                        <span>{settings.apiKey ? 'Chave ativa' : 'Sem chave'}</span>
+                        <span>✦ Mistral AI ativo</span>
                     </div>
                 </div>
 

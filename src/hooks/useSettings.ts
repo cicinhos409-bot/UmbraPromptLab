@@ -5,7 +5,6 @@ import { fetchSettings, upsertSettings } from '../lib/db';
 const SETTINGS_KEY = 'umbra_settings';
 
 const DEFAULT_SETTINGS: AppSettings = {
-    apiKey: '',
     model: 'mistral-large-latest',
     autoSave: true,
     language: 'pt',
@@ -33,7 +32,6 @@ export function useSettings() {
     const [settings, setSettings] = useState<AppSettings>(loadLocalSettings);
 
     // ── Bootstrap: sync model/autoSave/language from Supabase ──
-    // apiKey is intentionally excluded — it never leaves localStorage
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -58,7 +56,7 @@ export function useSettings() {
             const next = { ...prev, ...updates };
             saveLocalSettings(next);
 
-            // Sync non-sensitive fields to Supabase (omit apiKey)
+            // Sync fields to Supabase
             upsertSettings({
                 model: next.model,
                 autoSave: next.autoSave,
@@ -69,7 +67,5 @@ export function useSettings() {
         });
     }, []);
 
-    const hasApiKey = settings.apiKey.trim().length > 0;
-
-    return { settings, updateSettings, hasApiKey };
+    return { settings, updateSettings };
 }

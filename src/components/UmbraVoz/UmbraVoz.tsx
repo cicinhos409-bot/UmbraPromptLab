@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './UmbraVoz.css';
 
 interface UmbraVozProps {
@@ -111,8 +112,8 @@ function generateProfileLocal(d: Collected): VocalProfile {
     };
 }
 
-/* ── Mistral API call ─────────────────────────────────────────────── */
-async function generateProfileWithMistral(d: Collected, apiKey: string): Promise<VocalProfile> {
+/* ── Mistral API call (via server proxy) ──────────────────────────── */
+async function generateProfileWithMistral(d: Collected): Promise<VocalProfile> {
     const systemPrompt = `Você é especialista em fonoaudiologia e design vocal para IA. Responda APENAS com JSON válido, sem markdown, sem texto extra.`;
     const userPrompt = `Gere um perfil vocal técnico para:
 - Gênero vocal: ${d.genero}
@@ -130,21 +131,13 @@ Retorne APENAS este JSON preenchido (sem markdown):
   "articulacao": { "precisao_consoantes":"","sibilancia":"","padrao_final_de_frase":"","especificidade_regional":"" },
   "parametros_fixos_consistencia": { "pitch_central":"","variacao_maxima_permitida":"","velocidade_padrao_wpm":0,"nivel_fixo_ar":0.0,"nivel_fixo_rouquidao":0.0,"instrucao_veo3_completa":"" }
 }`;
-
-    const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-        body: JSON.stringify({
-            model: 'mistral-large-latest',
-            temperature: 0.4,
-            max_tokens: 2500,
-            messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
-        }),
+    const raw = await callMistralProxy({
+        model: 'mistral-large-latest',
+        temperature: 0.4,
+        max_tokens: 2500,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
     });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    const raw = (data.choices[0].message.content as string).replace(/```json|```/g, '').trim();
-    return JSON.parse(raw);
+    return JSON.parse(raw.replace(/```json|```/g, '').trim());
 }
 
 /* ── Output builders ──────────────────────────────────────────────── */
@@ -361,12 +354,8 @@ export const UmbraVoz: React.FC<UmbraVozProps> = ({ settings }) => {
         setEnabled(false);
         addMsg(`<div class="uv-ai-thinking">Consultando os archivos da Mistral AI...</div>`);
         const c = collRef.current;
-        const key = settings?.apiKey;
         try {
-            const prof = key
-                ? await generateProfileWithMistral(c, key)
-                : generateProfileLocal(c);
-            if (!key) addMsg('ℹ️ API Key não configurada — usando motor local como fallback.');
+            const prof = await generateProfileWithMistral(c);
             setProfile(prof);
             setPhase(4); setFlowSt('done'); flowRef.current = 'done';
             addMsg(`<div class="uv-q-badge">CONJURAÇÃO COMPLETA</div><br/>
@@ -374,15 +363,16 @@ export const UmbraVoz: React.FC<UmbraVozProps> = ({ settings }) => {
                 Perfil de <em>${c.genero}, ${c.idade}, ${c.regiao}</em> disponível abaixo em 4 formatos.<br/>
                 Use o <strong>Prompt VEO 3</strong> colando o bloco completo em cada cena.`);
             setOutputData(buildAllOutputData(prof));
-        } catch (err: any) {
-            addMsg(`⚠️ <strong>Erro Mistral:</strong> ${err.message}<br/>Gerando com motor local...`);
+        } catch (err) {
+            const errorMsg = err instanceof Error ? err.message : 'Erro inesperado';
+            addMsg(`⚠️ <strong>Erro Mistral:</strong> ${errorMsg}<br/>Gerando com motor local...`);
             const prof = generateProfileLocal(c);
             setProfile(prof);
             setPhase(4); setFlowSt('done'); flowRef.current = 'done';
             addMsg(`<div class="uv-q-badge">CONJURAÇÃO COMPLETA (local)</div><br/>✦ Perfil gerado com motor local.`);
             setOutputData(buildAllOutputData(prof));
         }
-    }, [addMsg, settings]);
+    }, [addMsg]);
 
     /* ── Init ── */
     useEffect(() => {

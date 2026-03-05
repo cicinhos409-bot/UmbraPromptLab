@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './UmbraCreator.css';
 
 interface UmbraCreatorProps {
@@ -71,19 +72,17 @@ const SECTION_COLORS: Record<string, string> = {
     '💰 ORÇAMENTO & RECURSOS': '#4a3a00',
 };
 
-async function callMistral(apiKey: string, messages: { role: string; content: string }[]): Promise<string> {
+async function callCreatorMistral(messages: { role: string; content: string }[]): Promise<string> {
     const systemPrompt = `Você é um assistente especialista em produção de anime, especialmente isekai. Sua função é guiar o usuário por perguntas para criar seu anime. Após cada resposta dê um comentário construtivo curto (1-2 frases), elogie ou dê uma dica, então aguarde a próxima pergunta do sistema. Seja entusiasmado, direto, em português brasileiro.`;
-    const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-        body: JSON.stringify({ model: 'mistral-small-latest', messages: [{ role: 'system', content: systemPrompt }, ...messages], max_tokens: 300, temperature: 0.7 }),
+    return callMistralProxy({
+        model: 'mistral-small-latest',
+        max_tokens: 300,
+        temperature: 0.7,
+        messages: [{ role: 'system', content: systemPrompt }, ...messages],
     });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    return data.choices[0].message.content as string;
 }
 
-export const UmbraCreator: React.FC<UmbraCreatorProps> = ({ settings }) => {
+export const UmbraCreator: React.FC<UmbraCreatorProps> = () => {
     const [msgs, setMsgs] = useState<ChatMsg[]>([]);
     const [answers, setAnswers] = useState<Record<number, Answer>>({});
     const [currentQ, setCurrentQ] = useState(-1);
@@ -153,24 +152,21 @@ export const UmbraCreator: React.FC<UmbraCreatorProps> = ({ settings }) => {
             setAnswers(prev => ({ ...prev, [qi]: { section: qObj.section, question: qObj.q, answer: text } }));
         }
 
-        const apiKey = settings?.apiKey;
-        if (apiKey) {
-            setTyping(true);
-            const newHistory = [...history, { role: 'user', content: `Pergunta: "${qObj?.q}" — Resposta: "${text}". Dê um feedback breve (1-2 frases) sobre essa resposta.` }];
-            setHistory(newHistory);
-            try {
-                const reply = await callMistral(apiKey, newHistory);
-                setHistory(h => [...h, { role: 'assistant', content: reply }]);
-                setTyping(false);
-                addMsg(reply);
-            } catch (e: any) {
-                setTyping(false);
-                addMsg(`⚠️ Erro Mistral: ${e.message}`);
-            }
+        setTyping(true);
+        const newHistory = [...history, { role: 'user', content: `Pergunta: "${qObj?.q}" — Resposta: "${text}". Dê um feedback breve (1-2 frases) sobre essa resposta.` }];
+        setHistory(newHistory);
+        try {
+            const reply = await callCreatorMistral(newHistory);
+            setHistory(h => [...h, { role: 'assistant', content: reply }]);
+            setTyping(false);
+            addMsg(reply);
+        } catch (e: any) {
+            setTyping(false);
+            addMsg(`⚠️ Erro Mistral: ${e.message}`);
         }
 
         askQuestion(qi + 1);
-    }, [input, enabled, settings, history, addMsg, askQuestion]);
+    }, [input, enabled, history, addMsg, askQuestion]);
 
     /* Progress */
     const progress = currentQ < 0 ? 0 : Math.min(100, Math.round((currentQ / QUESTIONS.length) * 100));
@@ -220,7 +216,7 @@ export const UmbraCreator: React.FC<UmbraCreatorProps> = ({ settings }) => {
                     <div className="uc-chat-header">
                         <div className="uc-status-dot" />
                         <span className="uc-status-txt">ANIME_ARCHITECT · ACTIVE</span>
-                        {!settings?.apiKey && <span className="uc-warn">⚠ Sem API Key — respostas da IA desativadas</span>}
+                        <span className="uc-ai-badge">✦ Mistral AI</span>
                     </div>
                     <div className="uc-messages">
                         {msgs.map(m => (

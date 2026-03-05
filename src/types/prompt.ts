@@ -72,12 +72,11 @@ export interface PresetIdea {
     tags: string[];
 }
 
-export type AppView = 'generator' | 'history' | 'presets' | 'settings' | 'grimorio' | 'isekai' | 'sinopses' | 'voiceforge' | 'onomancer' | 'inicio' | 'perfil' | 'umbravoz' | 'umbracreator';
+export type AppView = 'generator' | 'history' | 'presets' | 'settings' | 'grimorio' | 'isekai' | 'sinopses' | 'voiceforge' | 'onomancer' | 'inicio' | 'perfil' | 'umbravoz' | 'umbracreator' | 'galeria' | 'academia' | 'cenas' | 'promptscenas' | 'cenasestende' | 'cenaslocais' | 'promptsinicio' | 'promptsvidy' | 'promptsloop';
 
 
 
 export interface AppSettings {
-    apiKey: string;
     model: 'mistral-large-latest' | 'mistral-small-latest' | 'open-mistral-7b';
     autoSave: boolean;
     language: 'pt' | 'en';

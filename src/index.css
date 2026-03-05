@@ -72,14 +72,14 @@
 }
 
 html {
-    height: 100%;
+    min-height: 100%;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    height: 100%;
+    min-height: 100vh;
     background-color: var(--bg);
     background-image:
         radial-gradient(ellipse at 20% 50%, var(--warm-brown) 0%, transparent 60%),
@@ -89,23 +89,14 @@ body {
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.6;
-    overflow: hidden;
-}
-
-@media (max-width: 767px) {
-    body {
-        overflow-x: hidden;
-    }
-
-    #root {
-        height: auto;
-        min-height: 100%;
-    }
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #root {
-    height: 100%;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
 }
 
 /* ---------- Scrollbar ---------- */

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './IsekaiPlanner.css';
 
 /* ───────────────────────────────── Types ───────────────────────────────── */
@@ -164,30 +165,19 @@ export const IsekaiPlanner: React.FC<IsekaiPlannerProps> = ({ settings }) => {
     }, []);
 
     const callMistral = async (systemPrompt: string, pergunta: string): Promise<string> => {
-        const resp = await fetch('https://api.mistral.ai/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${settings.apiKey}` },
-            body: JSON.stringify({
-                model: 'mistral-large-latest',
-                max_tokens: 350,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: pergunta },
-                ],
-            }),
+        return callMistralProxy({
+            model: 'mistral-large-latest',
+            max_tokens: 350,
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: pergunta },
+            ],
         });
-        if (!resp.ok) {
-            const err = await resp.json().catch(() => ({}));
-            throw new Error((err as { message?: string }).message ?? `Erro ${resp.status}`);
-        }
-        const data = await resp.json() as { choices: { message: { content: string } }[] };
-        return data.choices[0].message.content.trim();
     };
 
     const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
     const iniciar = async () => {
-        if (!settings.apiKey) { alert('Configure sua API Key Mistral nas Configurações (⚙).'); return; }
         abortRef.current = false;
         setDone(false);
         setProgress(0);

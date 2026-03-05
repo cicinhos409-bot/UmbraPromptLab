@@ -15,6 +15,19 @@
     font-family: var(--font-body);
 }
 
+@media (max-width: 767px) {
+    .gs-container {
+        height: auto;
+        min-height: 500px;
+        overflow: visible;
+    }
+
+    .gs-chat {
+        overflow: visible !important;
+        height: auto !important;
+    }
+}
+
 /* ─── Header ─── */
 .gs-header {
     display: flex;

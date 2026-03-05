@@ -1,5 +1,6 @@
 import type { PromptRequest, GeneratedPrompt, AppSettings } from '../types/prompt';
 import { SYSTEM_UMBRA } from '../constants';
+import { callMistralProxy } from './mistralProxy';
 
 function buildUserMessage(req: PromptRequest): string {
     const styleMap: Record<string, string> = {
@@ -38,39 +39,16 @@ export async function generatePrompt(
     request: PromptRequest,
     settings: AppSettings
 ): Promise<GeneratedPrompt> {
-    if (!settings.apiKey || settings.apiKey.trim() === '') {
-        throw new Error('API key not configured. Please add your Mistral API key in Settings.');
-    }
-
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${settings.apiKey}`,
-        },
-        body: JSON.stringify({
-            model: settings.model || 'mistral-large-latest',
-            messages: [
-                { role: 'system', content: SYSTEM_UMBRA },
-                { role: 'user', content: buildUserMessage(request) },
-            ],
-            temperature: 0.85,
-            max_tokens: 1200,
-            response_format: { type: 'json_object' },
-        }),
+    const content = await callMistralProxy({
+        model: settings.model || 'mistral-large-latest',
+        messages: [
+            { role: 'system', content: SYSTEM_UMBRA },
+            { role: 'user', content: buildUserMessage(request) },
+        ],
+        temperature: 0.85,
+        max_tokens: 1200,
+        response_format: { type: 'json_object' },
     });
-
-    if (!response.ok) {
-        const errorBody = await response.text();
-        if (response.status === 401) throw new Error('Invalid API key. Please check your Mistral API key in Settings.');
-        if (response.status === 429) throw new Error('Rate limit reached. Please wait a moment and try again.');
-        throw new Error(`API Error (${response.status}): ${errorBody}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) throw new Error('Empty response from API.');
 
     let parsed: Omit<GeneratedPrompt, 'id' | 'style' | 'mood' | 'originalIdea' | 'createdAt'>;
     try {

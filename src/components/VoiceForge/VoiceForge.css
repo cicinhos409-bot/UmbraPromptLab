@@ -28,6 +28,19 @@
     padding-bottom: 40px;
 }
 
+@media (max-width: 767px) {
+    .vf-wrap {
+        height: auto;
+        overflow: visible;
+    }
+
+    .vf-messages {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
 .vf-wrap::-webkit-scrollbar {
     width: 5px;
 }

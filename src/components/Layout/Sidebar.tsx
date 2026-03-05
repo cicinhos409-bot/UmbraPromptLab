@@ -6,7 +6,6 @@ import './Sidebar.css';
 interface SidebarProps {
     activeView: AppView;
     onViewChange: (view: AppView) => void;
-    hasApiKey: boolean;
     historyCount: number;
     isOpen: boolean;
     onClose: () => void;
@@ -33,6 +32,8 @@ interface Stage {
 const FREE_ITEMS: { id: AppView; label: string; icon: string }[] = [
     { id: 'inicio', label: 'Início', icon: '🏠' },
     { id: 'perfil', label: 'Perfil', icon: '👤' },
+    { id: 'galeria', label: 'Galeria Umbra', icon: '🖼️' },
+    { id: 'academia', label: 'Academia de Anime', icon: '🎓' },
 ];
 
 /* ── Roadmap stages ─────────────────────────────── */
@@ -54,27 +55,27 @@ const STAGES: Stage[] = [
     {
         number: 2,
         label: 'CENAS',
-        stageStatus: 'locked',
+        stageStatus: 'active',
         items: [
-            { id: null, label: 'Umbra Cenas', status: 'locked' },
-            { id: null, label: 'Umbra Prompts Cenas', status: 'locked' },
-            { id: null, label: 'Umbra Cenas Estende', status: 'locked' },
-            { id: null, label: 'Umbra Cenas Locais', status: 'locked' },
+            { id: 'cenas', label: 'Umbra Cenas', status: 'active' },
+            { id: 'promptscenas', label: 'Umbra Prompts Cenas', status: 'active' },
+            { id: 'cenasestende', label: 'Umbra Cenas Estende', status: 'active' },
+            { id: 'cenaslocais', label: 'Umbra Cenas Locais', status: 'active' },
         ],
     },
     {
         number: 3,
         label: 'PROMPTS',
-        stageStatus: 'locked',
+        stageStatus: 'active',
         items: [
-            { id: null, label: 'Umbra Prompts Início', status: 'locked' },
-            { id: null, label: 'Umbra Prompts Vidy', status: 'locked' },
-            { id: null, label: 'Umbra Prompts Loop', status: 'locked' },
+            { id: 'promptsinicio', label: 'Umbra Prompts Início', status: 'active' },
+            { id: 'promptsvidy', label: 'Umbra Prompts Vidy', status: 'active' },
+            { id: 'promptsloop', label: 'Umbra Prompts Loop', status: 'active' },
         ],
     },
 ];
 
-const PROGRESS = 40;
+const PROGRESS = 100;
 
 const STAGE_BADGE: Record<string, string> = {
     done: '✅',
@@ -90,7 +91,7 @@ const ITEM_ICON: Record<ItemStatus, string> = {
 
 /* ── Component ──────────────────────────────────── */
 export const Sidebar: React.FC<SidebarProps> = ({
-    activeView, onViewChange, hasApiKey, historyCount, isOpen, onClose, user, onSignOut,
+    activeView, onViewChange, historyCount, isOpen, onClose, user, onSignOut,
 }) => {
     return (
         <aside
@@ -135,6 +136,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <div className="sdb-bar-track">
                         <div className="sdb-bar-fill" style={{ width: `${PROGRESS}%` }} />
                     </div>
+                </div>
+
+                {/* --- Cakto Subscription CTA --- */}
+                <div className="sidebar-cakto-cta">
+                    <a
+                        href="https://pay.cakto.com.br/o35rxms_783593"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-cakto-upgrade"
+                        title="Torne-se Turbo e libere todo o potencial"
+                    >
+                        <span className="upgrade-icon">✦</span>
+                        Assinar Turbo
+                    </a>
                 </div>
 
                 {/* ── Stages ── */}
@@ -192,10 +207,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         </div>
                     </div>
                 )}
-                <div className={`api-status ${hasApiKey ? 'connected' : 'disconnected'}`}>
+                <div className="api-status connected">
                     <span className="status-dot" />
                     <span className="status-label">
-                        {hasApiKey ? 'API Conectada' : 'Sem API Key'}
+                        ✦ Mistral AI
                     </span>
                 </div>
                 {/* Quick access to Settings */}

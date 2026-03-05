@@ -14,15 +14,7 @@ const MODELS = [
 ] as const;
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => {
-    const [showKey, setShowKey] = useState(false);
     const [saved, setSaved] = useState(false);
-    const [localKey, setLocalKey] = useState(settings.apiKey);
-
-    const handleSaveKey = () => {
-        onUpdate({ apiKey: localKey.trim() });
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2500);
-    };
 
     return (
         <div className="settings-panel fade-in">
@@ -31,56 +23,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate
                 <p className="panel-desc">Configure o Umbra Prompt Lab para seu ambiente.</p>
             </div>
 
-            {/* API Key */}
+            {/* API Status */}
             <div className="settings-section">
                 <div className="grimoire-divider">API Mistral</div>
                 <div className="settings-group">
-                    <label className="form-label" htmlFor="api-key-input">
+                    <label className="form-label">
                         <span className="label-icon">🔑</span>
-                        Mistral API Key
+                        Mistral AI
                     </label>
-                    <p className="settings-hint">
-                        Obtenha sua chave gratuita em{' '}
-                        <a href="https://console.mistral.ai/" target="_blank" rel="noopener noreferrer" className="settings-link">
-                            console.mistral.ai
-                        </a>
-                    </p>
-                    <div className="api-key-row">
-                        <div className="key-input-wrapper">
-                            <input
-                                id="api-key-input"
-                                type={showKey ? 'text' : 'password'}
-                                className="input-grimoire key-input"
-                                value={localKey}
-                                onChange={e => setLocalKey(e.target.value)}
-                                placeholder="sk-..."
-                                autoComplete="off"
-                                spellCheck={false}
-                            />
-                            <button
-                                type="button"
-                                className="key-toggle"
-                                onClick={() => setShowKey(v => !v)}
-                                title={showKey ? 'Ocultar' : 'Mostrar'}
-                            >
-                                {showKey ? '👁' : '🙈'}
-                            </button>
-                        </div>
-                        <button
-                            type="button"
-                            className={`btn-gold save-key-btn ${saved ? 'saved' : ''}`}
-                            onClick={handleSaveKey}
-                            id="save-api-key-btn"
-                        >
-                            {saved ? '✓ Salvo!' : 'Salvar'}
-                        </button>
+                    <div className="key-status">
+                        <span className="status-dot" style={{ background: '#4caf74', boxShadow: '0 0 6px rgba(76,175,116,0.6)' }} />
+                        ✦ API Key gerenciada pelo servidor — pronta para uso
                     </div>
-                    {settings.apiKey && (
-                        <div className="key-status">
-                            <span className="status-dot" style={{ background: '#4caf74', boxShadow: '0 0 6px rgba(76,175,116,0.6)' }} />
-                            API Key configurada ✓
-                        </div>
-                    )}
+                    <p className="settings-hint" style={{ marginTop: '8px' }}>
+                        A chave da API é configurada no servidor. Você pode usar todas as ferramentas de IA diretamente.
+                    </p>
                 </div>
             </div>
 

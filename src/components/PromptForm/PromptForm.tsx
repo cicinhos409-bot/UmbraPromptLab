@@ -6,7 +6,6 @@ import './PromptForm.css';
 interface PromptFormProps {
     onGenerate: (request: PromptRequest) => void;
     isLoading: boolean;
-    hasApiKey: boolean;
     initialIdea?: string;
     initialStyle?: StyleOption;
     initialMood?: MoodOption;
@@ -15,7 +14,6 @@ interface PromptFormProps {
 export const PromptForm: React.FC<PromptFormProps> = ({
     onGenerate,
     isLoading,
-    hasApiKey,
     initialIdea = '',
     initialStyle = 'anime',
     initialMood = 'epic',
@@ -33,7 +31,7 @@ export const PromptForm: React.FC<PromptFormProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!idea.trim() || isLoading || !hasApiKey) return;
+        if (!idea.trim() || isLoading) return;
         onGenerate({ idea: idea.trim(), style, mood, characterType });
     };
 
@@ -132,15 +130,10 @@ export const PromptForm: React.FC<PromptFormProps> = ({
 
             {/* Submit */}
             <div className="form-submit">
-                {!hasApiKey && (
-                    <p className="api-warning">
-                        ⚠️ Configure sua API Key nas <strong>Configurações</strong> para gerar prompts.
-                    </p>
-                )}
                 <button
                     type="submit"
                     className="btn-gold generate-btn"
-                    disabled={!idea.trim() || isLoading || !hasApiKey}
+                    disabled={!idea.trim() || isLoading}
                     id="generate-btn"
                 >
                     {isLoading ? (

@@ -11,6 +11,19 @@
     overflow: hidden;
 }
 
+@media (max-width: 767px) {
+    .uc-root {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .uc-messages {
+        overflow: visible !important;
+        height: auto !important;
+    }
+}
+
 /* ── Header ────────────────────────────────────────── */
 .uc-header {
     display: flex;

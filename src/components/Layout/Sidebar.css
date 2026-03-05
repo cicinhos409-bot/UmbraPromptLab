@@ -579,3 +579,73 @@
     opacity: 1;
     color: var(--red);
 }
+
+/* --- Cakto Subscription CTA --- */
+.sidebar-cakto-cta {
+    padding: 0 var(--space-md) var(--space-md);
+    margin-top: 8px;
+}
+
+.btn-cakto-upgrade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    width: 100%;
+    background: linear-gradient(135deg, #d4af37 0%, #f9d976 50%, #d4af37 100%);
+    background-size: 200% auto;
+    border: none;
+    border-radius: var(--radius-md);
+    color: #1a1501;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
+    animation: flowBG 4s linear infinite, glowPulse 3s ease-in-out infinite;
+}
+
+.btn-cakto-upgrade:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-cakto-upgrade:active {
+    transform: translateY(0);
+}
+
+.upgrade-icon {
+    font-size: 16px;
+}
+
+@keyframes flowBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(212, 175, 55, 0.6);
+    }
+}

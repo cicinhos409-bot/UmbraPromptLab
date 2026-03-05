@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { AppSettings } from '../../types/prompt';
+import { callMistralProxy } from '../../services/mistralProxy';
 import './GrimorioSinopses.css';
 
 /* ─── Types ─── */
@@ -97,7 +98,7 @@ interface GrimorioSinopsesProps {
     settings: AppSettings;
 }
 
-export const GrimorioSinopses: React.FC<GrimorioSinopsesProps> = ({ settings }) => {
+export const GrimorioSinopses: React.FC<GrimorioSinopsesProps> = () => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -138,12 +139,6 @@ export const GrimorioSinopses: React.FC<GrimorioSinopsesProps> = ({ settings }) 
         if (!text && !pendingImage) return;
         if (isLoading) return;
 
-        const apiKey = settings.apiKey;
-        if (!apiKey) {
-            alert('Configure sua API Key Mistral nas Configurações (⚙).');
-            return;
-        }
-
         // Build display and API content
         const displayText = text || '[Imagem enviada para análise]';
         let userContent: MessageContent;
@@ -178,37 +173,22 @@ export const GrimorioSinopses: React.FC<GrimorioSinopsesProps> = ({ settings }) 
         }));
 
         try {
-            const resp = await fetch('https://api.mistral.ai/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'mistral-large-latest',
-                    max_tokens: 2400,
-                    messages: [
-                        { role: 'system', content: SYSTEM_PROMPT },
-                        ...apiMessages
-                    ]
-                })
+            const reply = await callMistralProxy({
+                model: 'mistral-large-latest',
+                max_tokens: 2400,
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    ...apiMessages
+                ],
             });
-
-            if (!resp.ok) {
-                const err = await resp.json().catch(() => ({}));
-                throw new Error(err.message || `Erro ${resp.status}`);
-            }
-
-            const data = await resp.json();
-            const aiText: string = data.choices[0].message.content;
-            setMessages(prev => [...prev, { role: 'assistant', content: aiText }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : 'Erro inesperado';
             setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${msg}` }]);
         } finally {
             setIsLoading(false);
         }
-    }, [input, pendingImage, isLoading, messages, settings.apiKey]);
+    }, [input, pendingImage, isLoading, messages]);
 
     const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }

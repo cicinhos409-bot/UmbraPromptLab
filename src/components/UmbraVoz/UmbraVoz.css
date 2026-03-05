@@ -13,6 +13,19 @@
     position: relative;
 }
 
+@media (max-width: 767px) {
+    .umbravoz-root {
+        height: auto;
+        padding: 10px;
+    }
+
+    .uv-messages {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
 /* ── Phase Bar ─────────────────────────────────── */
 .uv-phase-bar {
     display: flex;

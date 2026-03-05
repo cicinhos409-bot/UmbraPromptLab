@@ -16,6 +16,14 @@
     color: var(--parchment);
 }
 
+@media (max-width: 767px) {
+    .ip-wrap {
+        height: auto;
+        overflow: visible;
+        padding-bottom: 30px;
+    }
+}
+
 .ip-wrap::-webkit-scrollbar {
     width: 4px;
 }
